@@ -38,6 +38,23 @@ server.get("/posts/:id", (req, res) => {
       });
   });
 
+  server.delete("/posts/:id", (req, res) => {
+    db.remove(req.params.id)
+      .then(post => {
+        if (post) {
+          res.status(200).json({ message: "the post was deleted" });
+        } else {
+          res.status(404).json({ message: "specifin=c ID not found" });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        res.status(500).json({
+          message: "Error retrieving the post"
+        });
+      });
+  });
+
 server.listen(8000, () => {
   console.log("\n*** Server Running on http://localhost:8000 ***\n");
 });
