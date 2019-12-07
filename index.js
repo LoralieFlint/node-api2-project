@@ -4,9 +4,9 @@ const server = express();
 
 server.use(express.json());
 
-// server.get("/", (req, res) => {
-//   res.send("<h2>Welcome to the Lambda posts API</h>");
-// });
+server.get("/", (req, res) => {
+  res.send("<h2>Welcome to the Lambda posts API</h>");
+});
 
 server.get("/api/posts", (req, res) => {
   db.find(req.query)
