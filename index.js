@@ -38,7 +38,7 @@ server.get("/posts/:id", (req, res) => {
     });
 });
 
-server.get("/posts/:id/comments", (req, res) => {
+server.get("/api/posts/:id/comments", (req, res) => {
   const commentsById = req.params.id;
   db.findPostComments(commentsById)
     .then(post => {
@@ -79,6 +79,26 @@ server.post("/api/posts", (req, res) => {
       });
   }
 });
+
+server.post('/posts/:id/comments', (req, res) => {
+  const newComment = req.body;
+  const id = req.params.id;
+
+  db.insertComment(newComment)
+      .then(comment => {
+          if (id.length === 0) {
+              res.status(404).json({ message: 'The post with the specified ID does not exist.' })
+          }
+          if (!newComment.text) {
+              res.status(400).json({ errorMessage: 'Please provide text for the comment.' })
+          } else {
+              res.status(201).json(comment);
+          }
+      })
+      .catch(err => {
+          res.status(500).json({ error: 'There was an error while saving the comment to the database.' })
+      })
+})
 
 server.delete("/posts/:id", (req, res) => {
   db.remove(req.params.id)
