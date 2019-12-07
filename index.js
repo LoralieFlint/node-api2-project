@@ -21,22 +21,22 @@ server.get("/api/posts", (req, res) => {
     });
 });
 
-// server.get("/:id", (req, res) => {
-//     db.find()
-//       .then(hub => {
-//         if (db) {
-//           res.status(200).json(db);
-//         } else {
-//           res.status(404).json({ message: "Hub not found" });
-//         }
-//       })
-//       .catch(error => {
-//         console.log(error);
-//         res.status(500).json({
-//           message: "Error retrieving the hub"
-//         });
-//       });
-//   });
+server.get("api/posts/:id", (req, res) => {
+    db.findById()
+      .then(id => {
+        if (db) {
+          res.status(200).json(id);
+        } else {
+          res.status(404).json({ message: "Hub not found" });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        res.status(500).json({
+          message: "Error retrieving the hub"
+        });
+      });
+  });
 
 server.listen(8000, () => {
   console.log("\n*** Server Running on http://localhost:8000 ***\n");
