@@ -22,38 +22,61 @@ server.get("/api/posts", (req, res) => {
 });
 
 server.get("/posts/:id", (req, res) => {
-    db.findById(req.params.id)
-      .then(post => {
-        if (post) {
-          res.status(200).json(post);
-        } else {
-          res.status(404).json({ message: "specifin=c ID not found" });
-        }
-      })
-      .catch(error => {
-        console.log(error);
-        res.status(500).json({
-          message: "Error retrieving the post"
-        });
+  db.findById(req.params.id)
+    .then(post => {
+      if (post) {
+        res.status(200).json(post);
+      } else {
+        res.status(404).json({ message: "specifin=c ID not found" });
+      }
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json({
+        message: "Error retrieving the post"
       });
-  });
+    });
+});
 
-  server.delete("/posts/:id", (req, res) => {
-    db.remove(req.params.id)
-      .then(post => {
-        if (post) {
-          res.status(200).json({ message: "the post was deleted" });
-        } else {
-          res.status(404).json({ message: "specifin=c ID not found" });
-        }
-      })
-      .catch(error => {
-        console.log(error);
-        res.status(500).json({
-          message: "Error retrieving the post"
-        });
+server.post("/api/posts", (req, res) => {
+  const newPost = req.body
+  if (!newPost.title || !newPost.contents) {
+    res
+      .status(400)
+      .json({
+        errorMessage: "Please provide title and contents."
       });
-  });
+  } else {
+    db.insert(newPost)
+      .then(post => {
+        res.status(201).json(post);
+      })
+      .catch(err => {
+        res
+          .status(500)
+          .json({
+            error: "There was an error while saving the post to the database."
+          });
+      });
+  }
+});
+
+server.delete("/posts/:id", (req, res) => {
+  db.remove(req.params.id)
+    .then(post => {
+      if (post) {
+        res.status(200).json({ message: "the post was deleted" });
+      } else {
+        res.status(404).json({ message: "specifin=c ID not found" });
+      }
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json({
+        message: "Error retrieving the post"
+      });
+    });
+});
 
 server.listen(8000, () => {
   console.log("\n*** Server Running on http://localhost:8000 ***\n");
