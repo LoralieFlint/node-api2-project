@@ -21,19 +21,19 @@ server.get("/api/posts", (req, res) => {
     });
 });
 
-server.get("api/posts/:id", (req, res) => {
-    db.findById()
-      .then(id => {
-        if (db) {
-          res.status(200).json(id);
+server.get("/posts/:id", (req, res) => {
+    db.findById(req.params.id)
+      .then(post => {
+        if (post) {
+          res.status(200).json(post);
         } else {
-          res.status(404).json({ message: "Hub not found" });
+          res.status(404).json({ message: "specifin=c ID not found" });
         }
       })
       .catch(error => {
         console.log(error);
         res.status(500).json({
-          message: "Error retrieving the hub"
+          message: "Error retrieving the post"
         });
       });
   });
